@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>高铁科普 · 智行</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    }
+    body {
+      background: #e9eef2;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+    #app {
+      max-width: 420px;
+      width: 100%;
+      background: #ffffff;
+      min-height: 100vh;
+      box-shadow: 0 0 20px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+    .app-header {
+      padding: 16px 18px 8px;
+      background: linear-gradient(145deg, #0b3954 0%, #0a4c6e 100%);
+      color: white;
+    }
+    .app-header h1 {
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .app-header h1 i {
+      font-size: 24px;
+      color: #ffd966;
+    }
+    .app-header .sub {
+      font-size: 13px;
+      opacity: 0.9;
+      margin-top: 4px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .main-content {
+      flex: 1;
+      padding: 16px 14px 20px;
+      background: #f8fafc;
+      overflow-y: auto;
+    }
+    .page {
+      display: none;
+    }
+    .page.active {
+      display: block;
+    }
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 16px 18px;
+      margin-bottom: 18px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+      border: 1px solid #f0f3f7;
+    }
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #1a2e3b;
+      border-left: 5px solid #0a6e9e;
+      padding-left: 12px;
+    }
+    .badge {
+      background: #eef3f7;
+      padding: 4px 12px;
+      border-radius: 30px;
+      font-size: 12px;
+      color: #0b4b6b;
+    }
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      text-align: center;
+    }
+    .quick-item {
+      background: #f2f7fc;
+      padding: 12px 4px;
+      border-radius: 16px;
+      transition: all 0.1s;
+      cursor: pointer;
+    }
+    .quick-item i {
+      font-size: 24px;
+      color: #0f6b94;
+      margin-bottom: 6px;
+    }
+    .quick-item span {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: #1f3c4d;
+    }
+    .news-item {
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #edf2f6;
+    }
+    .news-item:last-child {
+      border: none;
+    }
+    .news-badge {
+      background: #d4e3ed;
+      color: #0b4b6b;
+      border-radius: 20px;
+      padding: 2px 10px;
+      font-size: 11px;
+      margin-right: 12px;
+      height: fit-content;
+    }
+    .simulate-box {
+      background: #e6f0f7;
+      border-radius: 20px;
+      padding: 16px;
+      margin: 12px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .simulate-btn {
+      background: #0b6e9e;
+      color: white;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 14px;
+      box-shadow: 0 4px 8px rgba(11,110,158,0.2);
+      cursor: pointer;
+    }
+    .simulate-btn i {
+      margin-right: 6px;
+    }
+    .role-tabs {
+      display: flex;
+      background: #eef3f8;
+      border-radius: 40px;
+      padding: 4px;
+      margin-bottom: 18px;
+    }
+    .role-tab {
+      flex: 1;
+      text-align: center;
+      padding: 10px 0;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 15px;
+      color: #3a5b6e;
+      cursor: pointer;
+    }
+    .role-tab.active {
+      background: white;
+      color: #0a4c6e;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .bottom-nav {
+      background: white;
+      display: flex;
+      padding: 8px 12px 12px;
+      border-top: 1px solid #e2e9f0;
+      justify-content: space-around;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.02);
+    }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #7f9ab0;
+      font-size: 12px;
+      cursor: pointer;
+      padding: 4px 10px;
+      border-radius: 30px;
+    }
+    .nav-item i {
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+    .nav-item.active {
+      color: #0a6e9e;
+      background: #e5f0f9;
+      font-weight: 500;
+    }
+    /* 可展开科普卡片样式 */
+    .expand-card {
+      background: #f9fcff;
+      border-radius: 18px;
+      margin-bottom: 12px;
+      overflow: hidden;
+      border: 1px solid #e8eff4;
+    }
+    .expand-header {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      cursor: pointer;
+      background: white;
+      justify-content: space-between;
+    }
+    .expand-header i.fa-chevron-down {
+      transition: transform 0.2s;
+      color: #5f7d92;
+    }
+    .expand-card.open .expand-header i.fa-chevron-down {
+      transform: rotate(180deg);
+    }
+    .expand-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease;
+      background: #f8fcfd;
+      padding: 0 16px;
+      color: #1e3b4d;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .expand-card.open .expand-body {
+      max-height: 300px;
+      padding: 12px 16px 16px;
+    }
+    .text-content {
+      margin-bottom: 12px;
+    }
+    .qa-item {
+      padding: 14px 0;
+      border-bottom: 1px solid #eaeef3;
+    }
+    .qa-question {
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .toast-message {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1e3b4f;
+      color: white;
+      padding: 10px 24px;
+      border-radius: 50px;
+      opacity: 0;
+      transition: 0.2s;
+      pointer-events: none;
+      z-index: 999;
+      white-space: nowrap;
+    }
+    .toast-message.show {
+      opacity: 1;
+      bottom: 100px;
+    }
+    button {
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+    .search-bar {
+      background: #f0f5fa;
+      border-radius: 40px;
+      padding: 12px 18px;
+      color: #5b7e95;
+      margin-bottom: 18px;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="app-header">
+    <h1><i class="fas fa-train"></i> 高铁科普·智行</h1>
+    <div class="sub"><span> 中国速度 · 智慧科普</span><span><i class="far fa-bell"></i></span></div>
+  </div>
+
+  <div class="main-content">
+    <!-- 首页模块 -->
+    <div id="page-home" class="page active">
+      <div class="card">
+        <div class="card-title"><i class="fas fa-compass"></i> 快速入口</div>
+        <div class="quick-grid">
+          <div class="quick-item" data-nav="science" data-role="passenger"><i class="fas fa-info-circle"></i><span>设备科普</span></div>
+          <div class="quick-item" data-nav="science" data-role="smart"><i class="fas fa-mobile-alt"></i><span>智能操作</span></div>
+          <div class="quick-item" data-nav="science" data-role="fault"><i class="fas fa-exclamation-triangle"></i><span>故障处理</span></div>
+          <div class="quick-item" data-nav="training"><i class="fas fa-chalkboard-user"></i><span>专项培训</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><i class="fas fa-fire" style="color:#e68a2e;"></i> 热门科普</div>
+        <div class="news-item"><span class="news-badge">图文</span> 复兴号智能动车组 · 新功能详解</div>
+        <div class="news-item"><span class="news-badge">视频</span> 3分钟看懂高铁受电弓</div>
+        <div class="news-item"><span class="news-badge">模拟</span> 紧急破窗锤使用方法</div>
+      </div>
+      <div class="card">
+        <div class="card-title"><i class="far fa-newspaper"></i> 行业资讯</div>
+        <div class="news-item"><i class="far fa-clock" style="margin-right:10px; color:#0a6e9e;"></i> CR450动车组试验时速再创新高</div>
+        <div class="news-item"><i class="far fa-clock" style="margin-right:10px; color:#0a6e9e;"></i> 高铁静音车厢服务扩大试点</div>
+      </div>
+    </div>
+
+    <!-- 科普内容模块 (重点：可点击展开的图文科普) -->
+    <div id="page-science" class="page">
+      <div class="role-tabs">
+        <div class="role-tab active" data-role="passenger"> 旅客科普</div>
+        <div class="role-tab" data-role="staff"> 从业人员</div>
+      </div>
+      <!-- 旅客科普 -->
+      <div id="science-passenger">
+        <div class="card">
+          <div class="card-title"><i class="fas fa-microchip"></i> 基础设备科普</div>
+          <!-- 可展开卡片1：座椅调节 -->
+          <div class="expand-card">
+            <div class="expand-header">
+              <div><i class="fas fa-chair" style="color:#0a6e9e; margin-right:8px;"></i><strong>座椅调节</strong></div>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="expand-body">
+              <p class="text-content"> 高铁座椅可通过扶手内侧的圆形按钮调节靠背倾斜角度，部分车型配备脚踏板，可向外翻转使用。一等座还设有可收纳的小桌板和独立阅读灯。</p>
+              <p style="font-size:12px; color:#506e80;"> 示意图：扶手按钮位置</p>
+            </div>
+          </div>
+          <!-- 可展开卡片2：车载WiFi -->
+          <div class="expand-card">
+            <div class="expand-header">
+              <div><i class="fas fa-wifi" style="color:#0a6e9e; margin-right:8px;"></i><strong>车载WiFi连接</strong></div>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="expand-body">
+              <p class="text-content"> 打开手机无线网络，选择“高铁WiFi”或“CRRailway-WiFi”信号，连接后浏览器会自动弹出认证页面，输入手机号获取验证码即可免费上网。</p>
+            </div>
+          </div>
+          <!-- 可展开卡片3：大件行李存放 -->
+          <div class="expand-card">
+            <div class="expand-header">
+              <div><i class="fas fa-suitcase" style="color:#0a6e9e; margin-right:8px;"></i><strong>大件行李处</strong></div>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="expand-body">
+              <p class="text-content">🧳 每节车厢连接处设有大件行李架，适合放置28寸以上行李箱。车厢内部行李架适合放置随身小包和20寸以内登机箱。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><i class="fas fa-robot"></i> 智能设备操作</div>
+          <div class="expand-card">
+            <div class="expand-header">
+              <div><i class="fas fa-door-open" style="color:#0a6e9e; margin-right:8px;"></i><strong>自动门操作</strong></div>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="expand-body">
+              <p class="text-content"> 车厢两端自动门通过顶部传感器感应人员通过自动开启，也可轻按门旁的圆形按钮手动开门。紧急情况下可拉动红色解锁手柄手动开门。</p>
+              <div class="simulate-box" style="margin:12px 0;">
+                <span>模拟操作</span>
+                <button class="simulate-btn" id="simulateDoorBtn"><i class="fas fa-hand-pointer"></i> 模拟开门</button>
+              </div>
+            </div>
+          </div>
+          <div class="expand-card">
+            <div class="expand-header">
+              <div><i class="fas fa-lightbulb" style="color:#0a6e9e; margin-right:8px;"></i><strong>阅读灯与插座</strong></div>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="expand-body">
+              <p class="text-content"> 一等座和特等座配有独立阅读灯，在扶手处触控开关。座位下方或座椅间设有220V电源插座和USB接口。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><i class="fas fa-shield"></i> 故障应急处理</div>
+          <div class="expand-card">
+            <div class="expand-header">
+              <div><i class="fas fa-hammer" style="color:#0a6e9e; margin-right:8px;"></i><strong>紧急破窗锤</strong></div>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="expand-body">
+              <p class="text-content"> 紧急破窗锤存放在车厢侧壁的红色标记处。使用时取下锤子，用力敲击车窗玻璃四角标记点，切勿敲击中心。</p>
+              <button class="simulate-btn" style="background:#8f6f4c; margin-top:8px;" id="faultSimulate"><i class="fas fa-lightbulb"></i> 查看处置流程</button>
+            </div>
+          </div>
+          <div class="expand-card">
+            <div class="expand-header">
+              <div><i class="fas fa-fire-extinguisher" style="color:#0a6e9e; margin-right:8px;"></i><strong>灭火器位置</strong></div>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="expand-body">
+              <p class="text-content">🧯 每节车厢两端各配有一个干粉灭火器，放置在专用箱内。使用时拔掉保险销，对准火源根部喷射。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 从业人员科普 (默认隐藏) -->
+      <div id="science-staff" style="display:none;">
+        <div class="card">
+          <div class="card-title"><i class="fas fa-tools"></i> 维护·故障·技术</div>
+          <div class="expand-card">
+            <div class="expand-header">
+              <div><i class="fas fa-wrench"></i> <strong>日常维护要点</strong></div>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="expand-body">
+              <p class="text-content"> 走行部检查包括轮对踏面、轴箱、齿轮箱外观及温度；受电弓滑板厚度需定期测量，碳滑板磨耗到限必须更换。</p>
+            </div>
+          </div>
+          <div class="expand-card">
+            <div class="expand-header">
+              <div><i class="fas fa-bug"></i> <strong>常见故障代码</strong></div>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="expand-body">
+              <p class="text-content">⚠️ 30C8：牵引变流器故障；30B4：制动不缓解；3142：轴温报警。故障需结合运行数据和现场检查确认。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 技能培训模块 -->
+    <div id="page-training" class="page">
+      <div class="card">
+        <div class="card-title"><i class="fas fa-laptop"></i> 线上课程</div>
+        <div class="expand-card">
+          <div class="expand-header"><div><i class="fas fa-play"></i> <strong>基础：高铁概论</strong></div><i class="fas fa-chevron-down"></i></div>
+          <div class="expand-body"><p>8节课 · 涵盖高铁发展历史、基础设备名称与功能。</p></div>
+        </div>
+        <div class="expand-card">
+          <div class="expand-header"><div><i class="fas fa-chart-line"></i> <strong>进阶：牵引系统</strong></div><i class="fas fa-chevron-down"></i></div>
+          <div class="expand-body"><p>12节课 · 详解牵引变流器、电机控制逻辑。</p></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><i class="fas fa-pencil-alt"></i> 模拟考核</div>
+        <p>快速自测：高铁转向架主要组成？</p>
+        <div style="display:flex; gap:8px; margin:10px 0;">
+          <span class="badge" style="padding:8px 16px; background:#cbe0ed;" data-quiz="1">轮对+悬挂</span>
+          <span class="badge" style="padding:8px 16px; background:#cbe0ed;" data-quiz="2">车钩缓冲</span>
+        </div>
+        <button class="simulate-btn" id="quizCheckBtn">提交答案</button>
+      </div>
+    </div>
+
+    <!-- 互动问答模块 -->
+    <div id="page-qa" class="page">
+      <div class="search-bar"><i class="fas fa-search"></i> 搜索问题、关键词...</div>
+      <div class="card">
+        <div class="card-title"><i class="fas fa-fire"></i> 热门问题</div>
+        <div class="qa-item">
+          <div class="qa-question">高铁为什么没有安全带？</div>
+          <div class="text-content" style="font-size:13px; color:#2d4b5e;">高铁运行极度平稳，且座椅采用防撞设计。紧急制动时安全带反而可能阻碍乘客快速疏散。</div>
+        </div>
+        <div class="qa-item">
+          <div class="qa-question">复兴号WiFi怎么连接？</div>
+          <div class="text-content" style="font-size:13px; color:#2d4b5e;">选择“高铁WiFi”信号，浏览器认证页面输入手机号获取验证码即可。</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><i class="fas fa-question-circle"></i> 提问</div>
+        <textarea placeholder="输入你的问题…" style="width:100%; border-radius:20px; border:1px solid #d0dee9; padding:14px; background:#fbfdff;" rows="2"></textarea>
+        <button class="simulate-btn" style="width:100%; margin-top:10px;" id="askBtn"><i class="far fa-paper-plane"></i> 发布问题</button>
+      </div>
+    </div>
+
+    <!-- 个人中心模块 -->
+    <div id="page-profile" class="page">
+      <div style="display:flex; align-items:center; margin-bottom:20px;">
+        <div style="width:60px; height:60px; background:#b0d3e6; border-radius:50%; display:flex; align-items:center; justify-content:center; margin-right:16px;"><i class="fas fa-user-circle" style="font-size:48px; color:#1b4e6e;"></i></div>
+        <div><h3>高铁爱好者</h3><span>旅客 · 科普达人</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><i class="far fa-star"></i> 我的收藏</div>
+        <p>⭐ 复兴号智能操作指南</p>
+        <p>⭐ 受电弓故障案例</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部导航 -->
+  <div class="bottom-nav">
+    <div class="nav-item active" data-nav="home"><i class="fas fa-home"></i><span>首页</span></div>
+    <div class="nav-item" data-nav="science"><i class="fas fa-flask"></i><span>科普</span></div>
+    <div class="nav-item" data-nav="training"><i class="fas fa-graduation-cap"></i><span>培训</span></div>
+    <div class="nav-item" data-nav="qa"><i class="fas fa-comments"></i><span>问答</span></div>
+    <div class="nav-item" data-nav="profile"><i class="fas fa-user"></i><span>我的</span></div>
+  </div>
+  <div id="toast" class="toast-message">✨ 模拟交互反馈</div>
+</div>
+
+<script>
+  (function(){
+    const pages = {
+      home: document.getElementById('page-home'),
+      science: document.getElementById('page-science'),
+      training: document.getElementById('page-training'),
+      qa: document.getElementById('page-qa'),
+      profile: document.getElementById('page-profile')
+    };
+    const navItems = document.querySelectorAll('.nav-item');
+    const toastEl = document.getElementById('toast');
+
+    function showToast(msg) {
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      setTimeout(() => toastEl.classList.remove('show'), 1800);
+    }
+
+    function switchPage(pageId) {
+      Object.values(pages).forEach(p => p.classList.remove('active'));
+      if (pages[pageId]) pages[pageId].classList.add('active');
+      navItems.forEach(item => {
+        if (item.dataset.nav === pageId) item.classList.add('active');
+        else item.classList.remove('active');
+      });
+    }
+
+    navItems.forEach(item => {
+      item.addEventListener('click', () => switchPage(item.dataset.nav));
+    });
+
+    // 角色切换
+    const roleTabs = document.querySelectorAll('.role-tab');
+    roleTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        roleTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const role = tab.dataset.role;
+        document.getElementById('science-passenger').style.display = role === 'passenger' ? 'block' : 'none';
+        document.getElementById('science-staff').style.display = role === 'staff' ? 'block' : 'none';
+      });
+    });
+
+    // 可展开卡片交互
+    document.querySelectorAll('.expand-header').forEach(header => {
+      header.addEventListener('click', () => {
+        const card = header.closest('.expand-card');
+        card.classList.toggle('open');
+      });
+    });
+
+    // 模拟按钮
+    document.getElementById('simulateDoorBtn')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      showToast(' 车门已开启 (模拟)');
+    });
+    document.getElementById('faultSimulate')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      showToast(' 敲击车窗四角标记点');
+    });
+    document.getElementById('quizCheckBtn')?.addEventListener('click', () => showToast('✅ 答案已提交 (模拟)'));
+    document.getElementById('askBtn')?.addEventListener('click', () => showToast(' 问题已发布 (模拟)'));
+
+    // 快速入口跳转
+    document.querySelectorAll('.quick-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const nav = item.dataset.nav;
+        const role = item.dataset.role;
+        switchPage(nav);
+        if (nav === 'science' && role) {
+          const tab = document.querySelector(`.role-tab[data-role="${role === 'smart' || role === 'fault' ? 'passenger' : role}"]`);
+          if (tab) tab.click();
+        }
+      });
+    });
+
+    document.querySelectorAll('[data-quiz]').forEach(el => {
+      el.addEventListener('click', () => showToast('你选择了: ' + el.textContent));
+    });
+  })();
+</script>
+</body>
+</html>
+```
